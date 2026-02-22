@@ -24,6 +24,7 @@ android {
                 cppFlags += listOf("-std=c++20", "-fexceptions", "-frtti")
                 abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
                 arguments += listOf(
+                    "-DANDROID_PLATFORM=android-26",
                     "-DANDROID_STL=c++_shared",
                     "-DGGML_VULKAN=ON",     // Disabled: too memory-intensive for build environment
                     "-DGGML_OPENMP=OFF",     // generally safer on Android
