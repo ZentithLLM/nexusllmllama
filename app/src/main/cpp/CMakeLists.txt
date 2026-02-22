@@ -4,40 +4,36 @@ project(llama_android_bridge)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Enable Vulkan in ggml
+# ---- Android Vulkan Fix ----
+# Force dynamic Vulkan loading via Volk
 set(GGML_VULKAN ON CACHE BOOL "" FORCE)
 set(GGML_VULKAN_USE_VOLK ON CACHE BOOL "" FORCE)
+set(VK_NO_PROTOTYPES ON CACHE BOOL "" FORCE)
 
-# Disable things not needed
-set(GGML_OPENMP OFF CACHE BOOL "" FORCE)
-set(GGML_NATIVE OFF CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+# Prevent static Vulkan linking on Android
+set(Vulkan_FOUND FALSE)
 
-# ----------------------------
-# Add Vulkan-Hpp headers only
-# ----------------------------
-include(FetchContent)
-
-FetchContent_Declare(
-    vulkan_hpp
-    GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Hpp.git
-    GIT_TAG v1.3.275
-    GIT_SHALLOW TRUE
-)
-
-FetchContent_MakeAvailable(vulkan_hpp)
-
-# Add only headers
-include_directories(${vulkan_hpp_SOURCE_DIR})
-
-# ----------------------------
-# Add llama.cpp
-# ----------------------------
+# ---- Add llama.cpp submodule ----
 add_subdirectory(llama.cpp)
 
-# ----------------------------
-# JNI Bridge
-# ----------------------------
+# ---- Fix ggml-vulkan linking on Android ----
+if (ANDROID)
+    if (TARGET ggml-vulkan)
+        target_compile_definitions(ggml-vulkan PRIVATE
+            VK_NO_PROTOTYPES
+            VK_USE_PLATFORM_ANDROID_KHR
+        )
+
+        # Remove static Vulkan link
+        get_target_property(LIBS ggml-vulkan LINK_LIBRARIES)
+        if (LIBS)
+            list(REMOVE_ITEM LIBS Vulkan::Vulkan)
+            set_target_properties(ggml-vulkan PROPERTIES LINK_LIBRARIES "${LIBS}")
+        endif()
+    endif()
+endif()
+
+# ---- Your JNI bridge ----
 add_library(llama_android_bridge SHARED
     jni_bridge.cpp
     bridge/generation_worker.cpp
