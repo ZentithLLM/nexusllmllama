@@ -26,6 +26,7 @@ android {
                 arguments += listOf(
                     "-DANDROID_PLATFORM=android-26",
                     "-DANDROID_STL=c++_shared",
+                    "-DGGML_VULKAN_USE_VOLK=ON"
                     "-DGGML_VULKAN=ON",     // Disabled: too memory-intensive for build environment
                     "-DGGML_OPENMP=OFF",     // generally safer on Android
                     "-DGGML_NATIVE=OFF",      // avoid CPU-specific host tuning issues
