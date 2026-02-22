@@ -4,19 +4,40 @@ project(llama_android_bridge)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Enable Vulkan for ggml
+# Enable Vulkan in ggml
 set(GGML_VULKAN ON CACHE BOOL "" FORCE)
 set(GGML_VULKAN_USE_VOLK ON CACHE BOOL "" FORCE)
 
-# Disable things not needed on Android
+# Disable things not needed
 set(GGML_OPENMP OFF CACHE BOOL "" FORCE)
 set(GGML_NATIVE OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 
-# Add llama.cpp submodule
+# ----------------------------
+# Add Vulkan-Hpp headers only
+# ----------------------------
+include(FetchContent)
+
+FetchContent_Declare(
+    vulkan_hpp
+    GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Hpp.git
+    GIT_TAG v1.3.275
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(vulkan_hpp)
+
+# Add only headers
+include_directories(${vulkan_hpp_SOURCE_DIR})
+
+# ----------------------------
+# Add llama.cpp
+# ----------------------------
 add_subdirectory(llama.cpp)
 
-# Your JNI bridge library
+# ----------------------------
+# JNI Bridge
+# ----------------------------
 add_library(llama_android_bridge SHARED
     jni_bridge.cpp
     bridge/generation_worker.cpp
