@@ -22,16 +22,17 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags += listOf("-std=c++20", "-fexceptions", "-frtti")
-                abiFilters += listOf("arm64-v8a")
+                abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
                 arguments += listOf(
                     "-DANDROID_STL=c++_shared",
-                    "-DGGML_VULKAN=ON",      // disable GPU path
+                    "-DGGML_VULKAN=OFF",     // Vulkan C++ headers not available in Android NDK
                     "-DGGML_OPENMP=OFF",     // generally safer on Android
-                    "-DGGML_NATIVE=OFF"       // avoid CPU-specific host tuning issues
+                    "-DGGML_NATIVE=OFF",      // avoid CPU-specific host tuning issues
+                    "-DGGML_LLAMAFILE=OFF"    // not supported on Android; avoids armv7 fp16 intrinsics
                 )
             }
         }
-        ndk { abiFilters += listOf("arm64-v8a") }
+        ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64") }
     }
     externalNativeBuild {
         cmake {
