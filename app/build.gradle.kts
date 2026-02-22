@@ -81,7 +81,7 @@ afterEvaluate {
                 pom {
                     name.set("NexusLLMLlama")
                     description.set("Android library for running Llama models")
-                    url.set("https://github.com/zentithllm/nexusllmllama")
+                    url.set("https://github.com/npmnishantsharma/nexusllmllama")
 
                     licenses {
                         license {
@@ -99,9 +99,9 @@ afterEvaluate {
                     }
 
                     scm {
-                        connection.set("scm:git:git://github.com/zentithllm/nexusllmllama.git")
-                        developerConnection.set("scm:git:ssh://github.com/zentithllm/nexusllmllama.git")
-                        url.set("https://github.com/zentithllm/nexusllmllama")
+                        connection.set("scm:git:git://github.com/npmnishantsharma/nexusllmllama.git")
+                        developerConnection.set("scm:git:ssh://github.com/npmnishantsharma/nexusllmllama.git")
+                        url.set("https://github.com/npmnishantsharma/nexusllmllama")
                     }
                 }
             }
@@ -110,7 +110,7 @@ afterEvaluate {
         repositories {
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/YOUR_USERNAME/nexusllmllama")
+                url = uri("https://maven.pkg.github.com/npmnishantsharma/nexusllmllama")
                 credentials {
                     username = System.getenv("GITHUB_ACTOR") ?: findProperty("gpr.user") as String?
                     password = System.getenv("GITHUB_TOKEN") ?: findProperty("gpr.token") as String?
