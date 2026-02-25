@@ -31,6 +31,7 @@ android {
                     "-DGGML_OPENMP=OFF",     // generally safer on Android
                     "-DGGML_NATIVE=OFF",      // avoid CPU-specific host tuning issues
                     "-DGGML_LLAMAFILE=OFF"    // not supported on Android; avoids armv7 fp16 intrinsics
+                    "-DCMAKE_CXX_SCAN_FOR_MODULES=OFF"
                 )
             }
         }
