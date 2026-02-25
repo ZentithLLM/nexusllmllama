@@ -33,6 +33,7 @@ set(VK_NO_PROTOTYPES ON CACHE BOOL "" FORCE)
 # set(Vulkan_FOUND FALSE) # Disabled to allow finding Vulkan
 
 # ---- Add llama.cpp submodule ----
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 add_subdirectory(llama.cpp)
 
 # ---- Fix ggml-vulkan linking on Android ----
