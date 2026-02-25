@@ -21,7 +21,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags += listOf("-std=c++20", "-fexceptions", "-frtti")
+                cppFlags += listOf("-std=c++17", "-fexceptions", "-frtti")
                 abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
                 arguments += listOf(
                     "-DANDROID_PLATFORM=android-26",
