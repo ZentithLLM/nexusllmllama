@@ -24,19 +24,24 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    - name: Install Vulkan SDK + glslc
+    - name: Install Vulkan SDK, mesa-vulkan-drivers, glslc, and Ninja >=1.11
       run: |
         sudo apt update
         sudo apt install -y \
-            vulkan-tools \
-            libvulkan-dev \
-            glslc
+          vulkan-tools \
+          libvulkan-dev \
+          glslc \
+          mesa-vulkan-drivers
+        wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip
+        unzip ninja-linux.zip
+        sudo mv ninja /usr/local/bin/
+        ninja --version
 
     - name: Verify Vulkan
       run: |
         which glslc
         glslc --version
-        vulkaninfo | head -n 20
+        vulkaninfo | head -n 20 || echo "Expected warning: no Vulkan physical devices (headless CI is OK)"
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
