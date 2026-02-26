@@ -31,7 +31,8 @@ android {
                     "-DGGML_NATIVE=OFF",      // avoid CPU-specific host tuning issues
                     "-DGGML_LLAMAFILE=OFF",    // not supported on Android; avoids armv7 fp16 intrinsics
                     "-DCMAKE_CXX_SCAN_FOR_MODULES=OFF",
-                    "-DCMAKE_MAKE_PROGRAM=/usr/local/lib/android/sdk/cmake/3.31.5/bin/ninja"
+                    "-DCMAKE_MAKE_PROGRAM=/usr/local/lib/android/sdk/cmake/3.31.5/bin/ninja",
+                    "-DANDROID_PLATFORM=android-29"
                 )
             }
         }
