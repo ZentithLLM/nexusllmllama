@@ -16,7 +16,7 @@ android {
         }
     }
     defaultConfig {
-        minSdk = 26
+        minSdk = 29
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
