@@ -41,12 +41,12 @@ jobs:
         sudo install ninja /usr/local/bin/
         hash -r
         echo 'Ninja version in /usr/local/bin:' && /usr/local/bin/ninja --version
-        which ninja
-        ninja --version
 
-    - name: Ensure Ninja 1.11.1 is used in PATH
+    - name: Add /usr/local/bin to PATH for all steps
+      run: echo "/usr/local/bin" >> $GITHUB_PATH
+
+    - name: Verify ninja version in PATH
       run: |
-        export PATH="/usr/local/bin:$PATH"
         which ninja
         ninja --version
 
@@ -61,7 +61,6 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        export PATH="/usr/local/bin:$PATH"
         which ninja
         ninja --version
         ./gradlew app:assembleRelease
