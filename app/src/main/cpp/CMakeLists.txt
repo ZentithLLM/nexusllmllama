@@ -5,17 +5,25 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ------------------------------------------------------------
-# Enable Vulkan backend (Android uses system libvulkan.so)
+# Enable Vulkan backend
 # ------------------------------------------------------------
 set(GGML_VULKAN ON CACHE BOOL "" FORCE)
 
-# IMPORTANT:
-# Do NOT enable Volk on Android
-# Do NOT define VK_NO_PROTOTYPES
-# Android NDK provides proper Vulkan loader
+# ------------------------------------------------------------
+# Fetch Vulkan C++ Headers (needed for vulkan.hpp)
+# ------------------------------------------------------------
+include(FetchContent)
+
+FetchContent_Declare(
+    vulkan_headers
+    GIT_REPOSITORY https://github.com/KhronosGroup/Vulkan-Headers.git
+    GIT_TAG v1.3.296
+)
+
+FetchContent_MakeAvailable(vulkan_headers)
 
 # ------------------------------------------------------------
-# Find glslc inside Android NDK (for shader compilation)
+# Find glslc in Android NDK
 # ------------------------------------------------------------
 if (ANDROID AND DEFINED ANDROID_NDK)
     file(GLOB_RECURSE PROBABLE_GLSLC
@@ -41,26 +49,29 @@ list(APPEND CMAKE_MODULE_PATH
 add_subdirectory(llama.cpp)
 
 # ------------------------------------------------------------
-# Android-specific Vulkan linking
+# Fix ggml-vulkan include + link on Android
 # ------------------------------------------------------------
 if (ANDROID)
     if (TARGET ggml-vulkan)
 
-        # Required for Android surface support
         target_compile_definitions(ggml-vulkan PRIVATE
             VK_USE_PLATFORM_ANDROID_KHR
         )
 
-        # Link against Android system Vulkan
+        # Add Vulkan-Headers include path
+        target_include_directories(ggml-vulkan PRIVATE
+            ${vulkan_headers_SOURCE_DIR}/include
+        )
+
+        # Link Android system Vulkan
         target_link_libraries(ggml-vulkan PRIVATE
             vulkan
         )
-
     endif()
 endif()
 
 # ------------------------------------------------------------
-# JNI Bridge
+# JNI bridge
 # ------------------------------------------------------------
 add_library(llama_android_bridge SHARED
     jni_bridge.cpp
