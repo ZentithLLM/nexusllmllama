@@ -40,8 +40,15 @@ jobs:
         unzip -o ninja-linux.zip
         sudo install ninja /usr/local/bin/
         hash -r
-        ninja --version
+        echo 'Ninja version in /usr/local/bin:' && /usr/local/bin/ninja --version
         which ninja
+        ninja --version
+
+    - name: Ensure Ninja 1.11.1 is used in PATH
+      run: |
+        export PATH="/usr/local/bin:$PATH"
+        which ninja
+        ninja --version
 
     - name: Verify Vulkan
       run: |
@@ -53,7 +60,11 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew app:assembleRelease
+      run: |
+        export PATH="/usr/local/bin:$PATH"
+        which ninja
+        ninja --version
+        ./gradlew app:assembleRelease
 
     - name: Upload AAR Artifact
       uses: actions/upload-artifact@v4
