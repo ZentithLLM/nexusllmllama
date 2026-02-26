@@ -33,14 +33,15 @@ jobs:
           glslc \
           mesa-vulkan-drivers
 
-    - name: Install Ninja 1.11.1
+    - name: Ensure No Old Ninja, Install Ninja 1.11.1
       run: |
+        sudo apt-get remove -y ninja-build || true
         wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip
-        unzip ninja-linux.zip
-        sudo mv ninja /usr/local/bin/ninja
-        sudo chmod +x /usr/local/bin/ninja
-        sudo ln -sf /usr/local/bin/ninja /usr/bin/ninja
+        unzip -o ninja-linux.zip
+        sudo install ninja /usr/local/bin/
+        hash -r
         ninja --version
+        which ninja
 
     - name: Verify Vulkan
       run: |
